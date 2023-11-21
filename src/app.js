@@ -8,15 +8,11 @@ import {
   updateTask,
 } from './services/api.js';
 
-const app = () => {
-  let id = '';
-  let option = '';
-
-  do {
-    option = readlineSync.question(`
+function chooseMenuOption() {
+  const option = readlineSync.question(`
       ===== To Do List =====
       Escolha uma opção
-      
+
       1- Criar uma Tarefa
       2- Editar uma Tarefa
       3- Remover uma Tarefa
@@ -24,8 +20,14 @@ const app = () => {
       5- Obter uma Tarefa
       6- Encerrar
 
-    `);
+  `);
+  return option;
+}
 
+function menuController(option) {
+  let id = '';
+
+  if (option !== '6') {
     switch (option) {
       case '1':
         createTask();
@@ -53,6 +55,16 @@ const app = () => {
         console.log('Opção Inválida');
         break;
     }
+  }
+  return id;
+}
+
+const app = () => {
+  let option = '';
+
+  do {
+    option = chooseMenuOption();
+    menuController(option);
   } while (option !== '6');
 };
 

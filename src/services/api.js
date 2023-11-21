@@ -3,40 +3,83 @@ import readlineSync from 'readline-sync';
 import tasks from '../data/db.js';
 import { generateId } from '../utils/idGenerator.js';
 
+const findIndexById = (id) => {
+  const index = tasks.findIndex(({ id: taskId }) => taskId === Number(id));
+
+  if (index === -1) {
+    throw new Error('Tarefa não encontrada');
+  }
+
+  return index;
+};
+
+const taskNameInput = () => {
+  const name = readlineSync.question(`Informe o nome da tarefa: `);
+
+  return name;
+};
+
 export const createTask = () => {
   const id = generateId();
-  const name = readlineSync.question(`Informe o nome da tarefa: `);
+  const name = taskNameInput();
 
   const newTask = {
     id,
     name,
+    status: false,
   };
 
   tasks.push(newTask);
 };
 
-export const updateTask = (id) => {};
+export const updateTask = (id) => {
+  const index = findIndexById(id);
+
+  const name = taskNameInput();
+
+  const statusOptions = ['Concluída', 'Pendente'];
+  const status = readlineSync.keyInSelect(
+    statusOptions,
+    'Informe o status da tarefa: ',
+    { cancel: false },
+  );
+
+  tasks[index].name = name;
+  tasks[index].status = status === 'Pendente' ? false : true;
+
+  console.log('Tarefa editada com sucesso!');
+};
 
 export const deleteTask = (id) => {
+  const index = findIndexById(id);
+
+  tasks.splice(index, 1);
+
+  console.log('Tarefa removida!');
+};
+
+export const getTask = () => {
+  for (var i = 0; i < tasks.length; i++) {
+    const { id, name, status } = tasks[i];
+    console.log(`
+        Tarefa ${i + 1}
+        Id: ${id}
+        Nome: ${name}
+        Status: ${status ? 'Concluída' : 'Pendente'}
+        `);
+  }
+};
+
+export const detailTask = (id) => {
   const task = tasks.find(({ id: taskId }) => taskId === Number(id));
 
   if (!task) {
     throw new Error('Tarefa não encontrada');
   }
 
-  const index = Number(id) - 1;
-  tasks.splice(index, 1);
+  console.log(`     
+      Id: ${task.id}
+      Nome: ${task.name}
+      Status: ${task.status ? 'Concluída' : 'Pendente'}
+      `);
 };
-
-export const getTask = () => {
-  for (var i = 0; i < tasks.length; i++) {
-    const { id, name } = tasks[i];
-    console.log(`
-        Tarefa ${id}
-        Id: ${id}
-        Nome: ${name}
-        `);
-  }
-};
-
-export const detailTask = (id) => {};
