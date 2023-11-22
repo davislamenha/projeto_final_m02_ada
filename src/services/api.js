@@ -3,26 +3,18 @@ import tasks from '../data/db.js';
 import { generateId } from '../utils/idGenerator.js';
 
 const findIndexById = (id) => {
-  try {
-    const index = tasks.findIndex(({ id: taskId }) => taskId === Number(id));
+  const index = tasks.findIndex(({ id: taskId }) => taskId === Number(id));
 
-    if (index === -1) {
-      throw new Error('Tarefa não encontrada');
-    }
-
-    return index;
-  } catch (error) {
-    console.error(error.message);
+  if (index === -1) {
+    throw new Error('Tarefa não encontrada');
   }
+
+  return index;
 };
 
 const taskNameInput = () => {
-  try {
-    const name = readlineSync.question(`Informe o nome da tarefa: `);
-    return name;
-  } catch (error) {
-    console.error(error.message);
-  }
+  const name = readlineSync.question(`Informe o nome da tarefa: `);
+  return name;
 };
 
 export const createTask = () => {
