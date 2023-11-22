@@ -1,85 +1,111 @@
 import readlineSync from 'readline-sync';
-
 import tasks from '../data/db.js';
 import { generateId } from '../utils/idGenerator.js';
 
 const findIndexById = (id) => {
-  const index = tasks.findIndex(({ id: taskId }) => taskId === Number(id));
+  try {
+    const index = tasks.findIndex(({ id: taskId }) => taskId === Number(id));
 
-  if (index === -1) {
-    throw new Error('Tarefa não encontrada');
+    if (index === -1) {
+      throw new Error('Tarefa não encontrada');
+    }
+
+    return index;
+  } catch (error) {
+    console.error(error.message);
   }
-
-  return index;
 };
 
 const taskNameInput = () => {
-  const name = readlineSync.question(`Informe o nome da tarefa: `);
-
-  return name;
+  try {
+    const name = readlineSync.question(`Informe o nome da tarefa: `);
+    return name;
+  } catch (error) {
+    console.error(error.message);
+  }
 };
 
 export const createTask = () => {
-  const id = generateId();
-  const name = taskNameInput();
+  try {
+    const id = generateId();
+    const name = taskNameInput();
 
-  const newTask = {
-    id,
-    name,
-    status: false,
-  };
+    const newTask = {
+      id,
+      name,
+      status: false,
+    };
 
-  tasks.push(newTask);
+    tasks.push(newTask);
+  } catch (error) {
+    console.error(error.message);
+  }
 };
 
 export const updateTask = (id) => {
-  const index = findIndexById(id);
+  try {
+    const index = findIndexById(id);
 
-  const name = taskNameInput();
+    const name = taskNameInput();
 
-  const statusOptions = ['Concluída', 'Pendente'];
-  const status = readlineSync.keyInSelect(
-    statusOptions,
-    'Informe o status da tarefa: ',
-    { cancel: false },
-  );
+    const statusOptions = ['Concluída', 'Pendente'];
+    const status = readlineSync.keyInSelect(
+      statusOptions,
+      'Informe o status da tarefa: ',
+      { cancel: false },
+    );
 
-  tasks[index].name = name;
-  tasks[index].status = status === 'Pendente' ? false : true;
+    tasks[index].name = name;
+    tasks[index].status = status === 'Pendente' ? false : true;
 
-  console.log('Tarefa editada com sucesso!');
+    console.log('Tarefa editada com sucesso!');
+  } catch (error) {
+    console.error(error.message);
+  }
 };
 
 export const deleteTask = (id) => {
-  const index = findIndexById(id);
+  try {
+    const index = findIndexById(id);
 
-  tasks.splice(index, 1);
+    tasks.splice(index, 1);
 
-  console.log('Tarefa removida!');
+    console.log('Tarefa removida!');
+  } catch (error) {
+    console.error(error.message);
+  }
 };
 
 export const getTask = () => {
-  for (var i = 0; i < tasks.length; i++) {
-    const { id, name, status } = tasks[i];
-    console.log(`
-        Tarefa ${i + 1}
-        Id: ${id}
-        Nome: ${name}
-        Status: ${status ? 'Concluída' : 'Pendente'}
-        `);
+  try {
+    for (var i = 0; i < tasks.length; i++) {
+      const { id, name, status } = tasks[i];
+      console.log(`
+          Tarefa ${i + 1}
+          Id: ${id}
+          Nome: ${name}
+          Status: ${status ? 'Concluída' : 'Pendente'}
+          `);
+    }
+  } catch (error) {
+    console.error(error.message);
   }
 };
 
 export const detailTask = (id) => {
-  const task = tasks.find(({ id: taskId }) => taskId === Number(id));
+  try {
+    const task = tasks.find(({ id: taskId }) => taskId === Number(id));
 
-  if (!task) {
-    throw new Error('Tarefa não encontrada');
+    if (!task) {
+      throw new Error('Tarefa não encontrada');
+    }
+
+    console.log(`     
+        Id: ${task.id}
+        Nome: ${task.name}
+        Status: ${task.status ? 'Concluída' : 'Pendente'}
+        `);
+  } catch (error) {
+    console.error(error.message);
   }
-
-  console.log(`     
-      Id: ${task.id}
-      Nome: ${task.name}
-      Status: ${task.status ? 'Concluída' : 'Pendente'}
-      `);
 };
