@@ -25,7 +25,7 @@ function chooseMenuOption() {
 }
 
 function menuController(option) {
-  let id = '';
+  let id;
 
   if (option !== '6') {
     switch (option) {
@@ -60,7 +60,7 @@ function menuController(option) {
 }
 
 const app = () => {
-  let option = '';
+  let option;
 
   do {
     option = chooseMenuOption();
@@ -69,7 +69,7 @@ const app = () => {
 };
 
 const idParams = () => {
-  let id = '';
+  let id;
 
   id = readlineSync.question('Informe o id da tarefa: ');
 
